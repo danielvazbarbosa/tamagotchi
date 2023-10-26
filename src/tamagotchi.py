@@ -1,16 +1,15 @@
 class Tamagotchi:
 
-    def __init__(self, energiaMax:int, saciedadeMax:int, limpezaMax:int, idadeMax:int ):
+    def __init__(self, energiaMax:int, saciedadeMax:int, limpezaMax:int, idadeMax:int):
         self.energiaMax = energiaMax
         self.saciedadeMax = saciedadeMax
         self.limpezaMax = limpezaMax
         self.idadeMax = idadeMax
         self.energiaAtual = energiaMax
-        self.saciedadeAtual = saciedadeMax
         self.limpezaAtual = limpezaMax
+        self.saciedadeAtual = saciedadeMax
         self.idadeAtual = 0
         self.diamantes = 0
-        self.vida = True
 
     def getEnergiaMax(self):
         return self.energiaMax
@@ -40,84 +39,57 @@ class Tamagotchi:
         return self.diamantes
 
     def getEstaVivo(self):
-        if self.energiaAtual > 0 and self.saciedadeAtual > 0 and self.limpezaAtual > 0 and self.idadeAtual <= self.idadeMax:
-            self.vida = True
-            return self.vida
-        else:
-            self.vida = False
-            return 
+        if self.energiaAtual > 0 and self.limpezaAtual > 0 and self.saciedadeAtual > 0 and self.idadeAtual < self.idadeMax:
+            return True
+        elif self.energiaAtual < 0:
+            self.energiaAtual = 0
+        elif self.saciedadeAtual < 0:
+            self.saciedadeAtual = 0
+        elif self.limpezaAtual < 0:
+            self.limpezaAtual = 0
 
     def brincar(self):
-        if self.vida == True:
-            self.energiaAtual -= 2
-            self.saciedadeAtual -= 1
-            self.limpezaAtual -= 3
+        if self.getEstaVivo():
+            self.energiaAtual = max(self.energiaAtual - 2, 0)
+            self.saciedadeAtual = max(self.saciedadeAtual - 1, 0)
+            self.limpezaAtual = max(self.limpezaAtual - 3, 0)
+            self.idadeAtual = min(self.idadeAtual + 1, self.idadeMax)
             self.diamantes += 1
-            self.idadeAtual += 1
-            if self.energiaAtual >= self.energiaMax:
-                self.energiaAtual = self.energiaMax
-            if self.limpezaAtual >= self.limpezaMax:
-                self.limpezaAtual = self.limpezaMax 
-            if self.saciedadeAtual >= self.saciedadeMax:
-                self.saciedadeAtual = self.saciedadeMax
-            if self.idadeAtual >= self.idadeMax:
-                self.idadeAtual = self.idadeMax
             return True
         else:
             return False
 
     def comer(self):
-        if self.vida == True:
-            self.energiaAtual -= 1
-            self.saciedadeAtual += 4
-            self.limpezaAtual -= 2
-            self.idadeAtual += 1
-            if self.energiaAtual >= self.energiaMax:
-                self.energiaAtual = self.energiaMax
-            if self.limpezaAtual >= self.limpezaMax:
-                self.limpezaAtual = self.limpezaMax 
-            if self.saciedadeAtual >= self.saciedadeMax:
-                self.saciedadeAtual = self.saciedadeMax
-            if self.idadeAtual >= self.idadeMax:
-                self.idadeAtual = self.idadeMax
+        if self.getEstaVivo():
+            self.energiaAtual = max(self.energiaAtual - 1, 0)
+            self.saciedadeAtual = min(self.saciedadeAtual + 4, self.saciedadeMax)
+            if self.saciedadeAtual > self.saciedadeMax:
+                self.saciedadeAtual = self.saciedadeMax 
+            self.limpezaAtual = max(self.limpezaAtual - 2, 0)
+            self.diamantes += 0
+            self.idadeAtual = min(self.idadeAtual + 1, self.idadeMax)
             return True
         else:
             return False
 
     def dormir(self):
-        if self.vida == True:
-            if self.energiaAtual <= self.energiaMax - 5:
+        if self.getEstaVivo():
+            if self.energiaMax - 5 >= self.energiaAtual:
+                turno = self.energiaMax - self.energiaAtual
                 self.energiaAtual = self.energiaMax
-                self.saciedadeAtual -= 2
-                self.idadeAtual += 1
-                if self.energiaAtual >= self.energiaMax:
-                    self.energiaAtual = self.energiaMax
-                if self.limpezaAtual >= self.limpezaMax:
-                    self.limpezaAtual = self.limpezaMax 
-                if self.saciedadeAtual >= self.saciedadeMax:
-                    self.saciedadeAtual = self.saciedadeMax
-                if self.idadeAtual >= self.idadeMax:
-                    self.idadeAtual = self.idadeMax
+                self.idadeAtual += turno
+                self.saciedadeAtual = max(self.saciedadeAtual - 2, 0)
                 return True
-            else: 
-                return False
         else:
             return False
 
     def banhar(self):
-        if self.vida == True:
-            self.energiaAtual -= 3
-            self.saciedadeAtual -= 1
+        if self.getEstaVivo():
+            self.energiaAtual = max(self.energiaAtual - 3, 0)
+            self.saciedadeAtual = max(self.saciedadeAtual - 1, 0)
             self.limpezaAtual = self.limpezaMax
-            self.idadeAtual += 2
-            if self.energiaAtual >= self.energiaMax:
-                self.energiaAtual = self.energiaMax
-            if self.limpezaAtual >= self.limpezaMax:
-                self.limpezaAtual = self.limpezaMax 
-            if self.saciedadeAtual >= self.saciedadeMax:
-                self.saciedadeAtual = self.saciedadeMax
-            if self.idadeAtual >= self.idadeMax:
-                self.idadeAtual = self.idadeMax
+            self.diamantes += 0
+            self.idadeAtual = min(self.idadeAtual + 2, self.idadeMax)
             return True
         else:
             return False
